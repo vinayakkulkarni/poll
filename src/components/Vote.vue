@@ -2,11 +2,11 @@
   <div class="container">
     <div class="column is-half is-offset-one-quarter">
       <div class="box">
-        <div class="field" v-for="option in options" :key="option.name">
+        <div class="field" v-for="option in frameworks" :key="option.votes">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" v-model="option.checked">
-              <a :href="option.url" target="_blank">{{ option.name }}</a>
+              <input type="checkbox" v-model="option.vote">
+              <a :href="option.url" target="_blank">{{ option.title }}</a>
             </label>
           </div>  
         </div>
@@ -21,70 +21,36 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Firebase from 'firebase';
+
+const config = {
+  apiKey: 'AIzaSyDTgMinzwEKicJiPRnMOzAS1dghDwDZvaQ',
+  authDomain: 'gutenberg-poll.firebaseapp.com',
+  databaseURL: 'https://gutenberg-poll.firebaseio.com',
+  projectId: 'gutenberg-poll',
+  storageBucket: 'gutenberg-poll.appspot.com',
+  messagingSenderId: '80168469319',
+};
+const app = Firebase.initializeApp(config);
+const db = app.database();
+
+const frameworksRef = db.ref('frameworks');
 
 export default {
   name: 'voting',
+  firebase: {
+    frameworks: frameworksRef,
+  },
   data() {
     return {
       dataLoading: false,
-      options: this.defaultOptionsParams(),
-      results: null,
-      errors: null,
     };
   },
   methods: {
     addVote() {
       const t = this;
       t.dataLading = true;
-      axios.post('/api/v2/vote', t.options)
-       .then((response) => {
-         t.results = response.data;
-         t.dataLading = false;
-       })
-       .catch((error) => {
-         t.errors = error.data;
-       });
-    },
-    defaultOptionsParams() {
-      return [
-        {
-          name: 'VueJS',
-          url: 'https://vuejs.org',
-          checked: false,
-          votes: null,
-        },
-        {
-          name: 'Preact',
-          url: 'https://preactjs.com/',
-          checked: false,
-          votes: null,
-        },
-        {
-          name: 'Ember.js',
-          url: 'https://www.emberjs.org',
-          checked: false,
-          votes: null,
-        },
-        {
-          name: 'Marko.js',
-          url: 'https://markojs.com',
-          checked: false,
-          votes: null,
-        },
-        {
-          name: 'Angular',
-          url: 'https://angular.io',
-          checked: false,
-          votes: null,
-        },
-        {
-          name: 'Inferno',
-          url: 'https://infernojs.org',
-          checked: false,
-          votes: null,
-        },
-      ];
+      // frameworksRef.child(framework['.key'].votes = framework['.key'].votes + 1);
     },
   },
 };
