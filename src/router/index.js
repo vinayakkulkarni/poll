@@ -5,12 +5,12 @@ import Results from '@/components/Results';
 
 Vue.use(Router);
 const routes = [{
-  path: '/',
+  path: '/poll',
   name: 'Vote',
   component: Vote,
 },
 {
-  path: '/results',
+  path: '/poll/results',
   name: 'Results',
   component: Results,
 },
