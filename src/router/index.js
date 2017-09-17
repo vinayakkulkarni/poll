@@ -12,6 +12,7 @@ const routes = [{
 {
   path: '/poll/results',
   name: 'Results',
+  props: true,
   component: Results,
 },
 ];

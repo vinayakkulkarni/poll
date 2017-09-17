@@ -2,17 +2,17 @@
   <div class="container">
     <div class="column is-half is-offset-one-quarter">
       <div class="box">
-        <div class="field" v-for="option in frameworks" :key="option.votes">
+        <div class="field" v-for="option in frameworks" :key="option.title">
           <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" v-model="option.vote">
-              <a :href="option.url" target="_blank">{{ option.title }}</a>
+            <label for="vote" class="checkbox">
+              <input type="checkbox" name="vote" :value="option" v-model="checkedVotes">
+              <a :href="option.url" target="_blank">{{ option.title }} ({{ option.votes }})</a>
             </label>
           </div>  
         </div>
         <div class="field">
           <div class="control">
-            <button class="button is-primary" @click="addVote" :class="{'is-loading': dataLoading}">Submit</button>
+            <button v-if="!voted" class="button is-primary" @click.once="addVote" :class="{'is-loading': dataLoading}">Submit</button>
           </div>
         </div>
       </div>
@@ -22,6 +22,11 @@
 
 <script>
 import Firebase from 'firebase';
+import Vue from 'vue';
+import Toasted from 'vue-toasted';
+import NProgress from 'nprogress';
+
+Vue.use(Toasted, { position: 'bottom-right', duration: 3000 });
 
 const config = {
   apiKey: 'AIzaSyDTgMinzwEKicJiPRnMOzAS1dghDwDZvaQ',
@@ -33,7 +38,6 @@ const config = {
 };
 const app = Firebase.initializeApp(config);
 const db = app.database();
-
 const frameworksRef = db.ref('frameworks');
 
 export default {
@@ -43,14 +47,25 @@ export default {
   },
   data() {
     return {
+      voted: false,
       dataLoading: false,
+      checkedVotes: [],
     };
   },
   methods: {
     addVote() {
       const t = this;
-      t.dataLading = true;
-      // frameworksRef.child(framework['.key'].votes = framework['.key'].votes + 1);
+      t.dataLoading = true;
+      NProgress.start();
+      setTimeout(() => { this.dataLoading = false; }, 2000);
+      if (t.checkedVotes.length === 0) { return; }
+      for (let i = 0; i < t.checkedVotes.length; i += 1) {
+        frameworksRef.child(t.checkedVotes[i]['.key']).child('votes').set(t.checkedVotes[i].votes += 1);
+        t.voted = true;
+        NProgress.done(true);
+        Vue.toasted.success(`Thank you for Voting: ${t.checkedVotes[i].title}!`);
+        setTimeout(() => { t.$router.push({ name: 'Results', params: { frameworks: t.$firebaseRefs.frameworks } }); }, 1000);
+      }
     },
   },
 };
