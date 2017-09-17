@@ -8,13 +8,6 @@
         :to="{ name: 'Vote' }" exact>
         Vote
       </router-link>
-      <router-link 
-        tag="a"
-        :class="{'is-active': $route.name == 'Results'}"
-        class="navbar-item" 
-        :to="{ name: 'Results' }" exact>
-        Results
-      </router-link>
     </div>
   </nav>
 </template>

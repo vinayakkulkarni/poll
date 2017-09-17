@@ -64,7 +64,6 @@ export default {
         t.voted = true;
         NProgress.done(true);
         Vue.toasted.success(`Thank you for Voting: ${t.checkedVotes[i].title}!`);
-        setTimeout(() => { t.$router.push({ name: 'Results', params: { frameworks: t.$firebaseRefs.frameworks } }); }, 1000);
       }
     },
   },
