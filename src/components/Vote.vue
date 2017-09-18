@@ -5,7 +5,7 @@
         <div class="field" v-for="option in frameworks" :key="option.title">
           <div class="control">
             <label for="vote" class="checkbox">
-              <input type="checkbox" name="vote" :value="option" v-model="checkedVotes">
+              <input v-if="!voted" type="checkbox" name="vote" :value="option" v-model="checkedVotes">
               <a :href="option.url" target="_blank">{{ option.title }} ({{ option.votes }})</a>
             </label>
           </div>  
@@ -21,11 +21,13 @@
 </template>
 
 <script>
+import VueLocalStorage from 'vue-localstorage';
 import Firebase from 'firebase';
 import Vue from 'vue';
 import Toasted from 'vue-toasted';
 import NProgress from 'nprogress';
 
+Vue.use(VueLocalStorage);
 Vue.use(Toasted, { position: 'bottom-right', duration: 3000 });
 
 const config = {
@@ -45,12 +47,23 @@ export default {
   firebase: {
     frameworks: frameworksRef,
   },
+  localStorage: {
+    voted: {
+      type: Boolean,
+    },
+  },
   data() {
     return {
       voted: false,
       dataLoading: false,
       checkedVotes: [],
     };
+  },
+  mounted() {
+    const t = this;
+    if (t.$localStorage.get('voted') && t.$localStorage.get('voted') !== undefined) {
+      t.voted = t.$localStorage.get('voted');
+    }
   },
   methods: {
     addVote() {
@@ -61,6 +74,7 @@ export default {
       if (t.checkedVotes.length === 0) { return; }
       for (let i = 0; i < t.checkedVotes.length; i += 1) {
         frameworksRef.child(t.checkedVotes[i]['.key']).child('votes').set(t.checkedVotes[i].votes += 1);
+        t.$localStorage.set('voted', true);
         t.voted = true;
         NProgress.done(true);
         Vue.toasted.success(`Thank you for Voting: ${t.checkedVotes[i].title}!`);

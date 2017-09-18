@@ -16,6 +16,7 @@
     "nprogress": "^0.2.0",
     "v-offline": "^1.0.2",
     "vue": "^2.4.2",
+    "vue-localstorage": "^0.4.2",
     "vue-router": "^2.7.0",
     "vue-toasted": "^1.1.18",
     "vuefire": "^1.4.3",
