@@ -30,15 +30,7 @@ import NProgress from 'nprogress';
 Vue.use(VueLocalStorage);
 Vue.use(Toasted, { position: 'bottom-right', duration: 3000 });
 
-const config = {
-  apiKey: 'AIzaSyDTgMinzwEKicJiPRnMOzAS1dghDwDZvaQ',
-  authDomain: 'gutenberg-poll.firebaseapp.com',
-  databaseURL: 'https://gutenberg-poll.firebaseio.com',
-  projectId: 'gutenberg-poll',
-  storageBucket: 'gutenberg-poll.appspot.com',
-  messagingSenderId: '80168469319',
-};
-const app = Firebase.initializeApp(config);
+const app = Firebase.initializeApp({ databaseURL: 'https://gutenberg-poll.firebaseio.com' });
 const db = app.database();
 const frameworksRef = db.ref('frameworks');
 
