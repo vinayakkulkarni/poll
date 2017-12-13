@@ -1,4 +1,4 @@
-# :chart_with_upwards_trend: Gutenberg Poll :100: https://vinayakkulkarni.github.io/poll/
+# :chart_with_upwards_trend: [Gutenberg Poll :100:](https://vinayakkulkarni.github.io/poll/)
 
 > Simple Voting site implementing using Vue 2.4 & Firebase.
 
